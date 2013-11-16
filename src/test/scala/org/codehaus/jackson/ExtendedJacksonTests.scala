@@ -81,6 +81,16 @@ object ExtendedJsonNodeTests extends Properties("ExtendedJsonNode") with SharedM
     val data = TestData.joinPart(1)
     mapper.parse(data) / "foo" / 100 == None
   }
+
+  property("getOrElse") = {
+    val data = TestData.joinPart(2)
+    mapper.parse(data).get.getOrElse("user", Helpers.text("fallback")) == Helpers.text("devon")
+  }
+
+  property("getOrElse2") = {
+    val data = TestData.joinPart(2)
+    mapper.parse(data).get.getOrElse("missingKey", Helpers.text("fallback")) == Helpers.text("fallback")
+  }
 }
 
 object JsonNodeHelperTests extends Properties("Helpers") with SharedMapper {
