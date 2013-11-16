@@ -9,3 +9,7 @@ class ExtendedJsonNode(val node: JsonNode) {
   def apply[T](key: T): JsonNode = ???
   def lift[T](key: T): Option[JsonNode] = ???
 }
+
+trait JsonNodeImplicits {
+  implicit def extendJsonNode(node: JsonNode): ExtendedJsonNode = new ExtendedJsonNode(node)
+}

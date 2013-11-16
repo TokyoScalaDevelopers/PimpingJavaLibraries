@@ -9,3 +9,7 @@ import org.codehaus.jackson.JsonNode
 class ExtendedObjectMapper(val mapper: ObjectMapper) {
   def parse[T](data: T): Try[JsonNode] = ???
 }
+
+trait ObjectMapperImplicits {
+  implicit def extendObjectMapper(mapper: ObjectMapper): ExtendedObjectMapper = new ExtendedObjectMapper(mapper)
+}
