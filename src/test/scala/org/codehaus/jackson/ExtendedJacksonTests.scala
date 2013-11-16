@@ -32,12 +32,43 @@ object TestData {
   )
 }
 
-object ExtendedObjectMapperTests extends Properties("ExtendedObjectMapper") {
+trait SharedMapper {
+  def mapper = new ObjectMapper
+}
+
+object ExtendedObjectMapperTests extends Properties("ExtendedObjectMapper") with SharedMapper {
   property("canParseValid") = {
-    (new ObjectMapper).parse(TestData.talk(0)).isSuccess
+    mapper.parse(TestData.talk(0)).isSuccess
   }
 
   property("canHandleFailure") = {
-    (new ObjectMapper).parse(TestData.invalid(0)).isFailure
+    mapper.parse(TestData.invalid(0)).isFailure
+  }
+}
+
+object ExtendedJsonNodeTests extends Properties("ExtendedJsonNode") with SharedMapper {
+  property("apply") = {
+    val data = TestData.joinPart(1)
+    mapper.parse(data).get.apply("message") == Helpers.text("has entered the room")
+  }
+
+  property("hiddenApply") = { // This test is almost exactly like the last test, but since Option.get is a unary function, we can call JsonNode's apply like this.
+    val data = TestData.joinPart(1)
+    mapper.parse(data).get("message") == Helpers.text("has entered the room")
+  }
+
+  property("getIndex") = {
+    val data = TestData.joinPart(1)
+    mapper.parse(data).get.apply("members").apply(0) == Helpers.text("Robot")
+  }
+
+  property("liftGetKey") = {
+    val data = TestData.joinPart(1)
+    mapper.parse(data).toOption.flatMap( _.lift("message") ) == Some(Helpers.text("has entered the room"))
+  }
+
+  property("getIndex") = {
+    val data = TestData.joinPart(1)
+    mapper.parse(data).toOption.flatMap( _.lift("members") ).flatMap( _.lift(0) ) == Some(Helpers.text("Robot"))
   }
 }
