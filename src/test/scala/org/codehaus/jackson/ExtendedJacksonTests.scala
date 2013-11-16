@@ -1,3 +1,14 @@
+import org.scalacheck.Properties
+import org.scalacheck.Prop.forAll
+
+import org.codehaus.jackson.map.ObjectMapper
+import org.codehaus.jackson.JsonNode
+
+import org.codehaus.jackson.extended._
+import org.codehaus.jackson.extended.implicits._
+
+import util.{Try,Success,Failure}
+
 object TestData {
   val talk = List(
     """{"kind":"talk","user":"Robot","message":"I'm still alive","members":["Robot","devon"]}""",
@@ -19,4 +30,14 @@ object TestData {
   val invalid = List(
     """{"kind":"talk","user":"Robot","me""" // ssage":"I'm still alive","members":["Robot","devon"]}"""
   )
+}
+
+object ExtendedObjectMapperTests extends Properties("ExtendedObjectMapper") {
+  property("canParseValid") = {
+    (new ObjectMapper).parse(TestData.talk(0)).isSuccess
+  }
+
+  property("canHandleFailure") = {
+    (new ObjectMapper).parse(TestData.invalid(0)).isFailure
+  }
 }
