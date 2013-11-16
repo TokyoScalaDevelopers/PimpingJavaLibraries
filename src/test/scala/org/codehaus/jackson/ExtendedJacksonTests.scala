@@ -71,6 +71,16 @@ object ExtendedJsonNodeTests extends Properties("ExtendedJsonNode") with SharedM
     val data = TestData.joinPart(1)
     mapper.parse(data).toOption.flatMap( _.lift("members") ).flatMap( _.lift(0) ) == Some(Helpers.text("Robot"))
   }
+
+  property("getNiceIndex") = {
+    val data = TestData.joinPart(1)
+    mapper.parse(data) / "members" / 0 == Some(Helpers.text("Robot"))
+  }
+
+  property("getInvalidNiceIndex") = {
+    val data = TestData.joinPart(1)
+    mapper.parse(data) / "foo" / 100 == None
+  }
 }
 
 object JsonNodeHelperTests extends Properties("Helpers") with SharedMapper {
