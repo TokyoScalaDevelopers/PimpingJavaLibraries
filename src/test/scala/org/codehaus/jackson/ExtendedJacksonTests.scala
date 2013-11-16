@@ -72,3 +72,37 @@ object ExtendedJsonNodeTests extends Properties("ExtendedJsonNode") with SharedM
     mapper.parse(data).toOption.flatMap( _.lift("members") ).flatMap( _.lift(0) ) == Some(Helpers.text("Robot"))
   }
 }
+
+object JsonNodeHelperTests extends Properties("Helpers") with SharedMapper {
+  property("buildIntegerNode") = {
+    Helpers.numeric(1234:Int).toString == "1234"
+  }
+
+  property("buildLongNode") = {
+    Helpers.numeric(1234:Long).toString == "1234"
+  }
+
+  property("buildBigIntegerNode") = {
+    Helpers.numeric(new java.math.BigInteger("1234")).toString == "1234"
+  }
+
+  property("buildDoubleNode") = {
+    Helpers.numeric(1234.0: Double).toString == "1234.0"
+  }
+
+  property("buildTrue") = {
+    Helpers.bool(true).toString == "true" && Helpers.boolean(true).toString == "true"
+  }
+
+  property("buildFalse") = {
+    Helpers.bool(false).toString == "false" && Helpers.boolean(false).toString == "false"
+  }
+
+  property("buildNull") = {
+    Helpers.`null`.toString == "null"
+  }
+
+  property("buildString") = {
+    Helpers.text("""This is a string "with quotes".""").toString == "\"" + """This is a string \"with quotes\".""" + "\""
+  }
+}
