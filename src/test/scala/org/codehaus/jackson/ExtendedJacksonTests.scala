@@ -126,3 +126,13 @@ object JsonNodeHelperTests extends Properties("Helpers") with SharedMapper {
     Helpers.text("""This is a string "with quotes".""").toString == "\"" + """This is a string \"with quotes\".""" + "\""
   }
 }
+
+object BuildJsonTests extends Properties("<Build Json>") with SharedMapper {
+  property("emptyObject") = {
+    mapper.createObject.toString == "{}"
+  }
+
+  property("emptyArray") = {
+    mapper.createArray.toString == "[]"
+  }
+}

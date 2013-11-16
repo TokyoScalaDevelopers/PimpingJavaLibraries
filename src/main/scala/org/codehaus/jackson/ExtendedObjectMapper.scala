@@ -5,6 +5,7 @@ import scala.util.{Try,Success,Failure}
 
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.JsonNode
+import org.codehaus.jackson.node.{ObjectNode,ArrayNode}
 
 // Readable[T] imports
 import org.codehaus.jackson.JsonParser
@@ -19,6 +20,8 @@ trait Readable[T] {
 
 class ExtendedObjectMapper(val mapper: ObjectMapper) {
   def parse[T](data: T)(implicit ev: Readable[T]): Try[JsonNode] = Try(ev.read(mapper, data))
+  def createObject: ObjectNode = mapper.createObjectNode
+  def createArray: ArrayNode = mapper.createArrayNode
 }
 
 trait ObjectMapperImplicits {
